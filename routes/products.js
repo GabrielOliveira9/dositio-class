@@ -1,5 +1,6 @@
 /** @type{import('fastify').FastifyPluginAsync<>} */
 import createError from '@fastify/error';
+
 export default async function products(app, options) {
     const InvalidProductError = createError('InvalidProductError', 'Produto Inválido.', 400);
 
@@ -23,9 +24,10 @@ export default async function products(app, options) {
                 properties: {
                     id: { type: 'integer' },
                     name: { type: 'string' },
-                    qtd: { type: 'integer' }
+                    qtd: { type: 'integer' },
+                    cat_id: {type: 'string'}
                 },
-                required: ['name', 'qtd']
+                required: ['name', 'qtd', 'cat_id']
             }
         },
         config: {
@@ -69,7 +71,8 @@ export default async function products(app, options) {
         await products.updateOne({_id: new app.mongo.ObjectId(id)}, {
             $set: {
                 name: product.name,
-                qtd: product.qtd
+                qtd: product.qtd,
+                cat_id: product.cat_id
             }
         });
         
