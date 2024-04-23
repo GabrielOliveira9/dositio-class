@@ -17,6 +17,8 @@ npm install
 ```
 ## Configuração
 O arquivo _.env.sample_ deve ser renomeado para _.env_ e suas propriedades devem ser alteradas para que estejam de acordo com as que você irá usar.
+
+Caso faça alterações, o arquivo _test_ também deverá ser atualizado para que a testagem de configuração esteja de acordo com os novos dados.
 ## Inicialização
 O comando a seguir deve ser digitado no terminal para inicializar o ambiente:
 ```
