@@ -23,7 +23,12 @@ O comando a seguir deve ser digitado no terminal para inicializar o ambiente:
 npm run dev
 ```
 ## Testagem
+### Criação dos registros
+Para executar os testes, devem ser criadas no banco de dados as entradas representadas nos arquivos `dositio.categories.json` e `dositio.products.json`.
+### Execução dos testes
 Para executar a sequência de testes, o comando a seguir deve ser digitado no terminal:
 ```
 npm run test
 ```
+### Repetição da testagem
+Para realizar uma nova testagem, deve garantir-se de que os registros estão novamente iguais ao seu respectivo arquivo JSON. 
