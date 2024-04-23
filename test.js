@@ -2,20 +2,30 @@ import { test, describe } from 'node:test';
 import { equal, deepEqual } from 'node:assert';
 import { build, options } from './app.js';
 
+const testJWT = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.vYHN1AnpQpdig7rFNy7K3b8DKhAOpz70tB9blw7qvKs';
+
 const postProductTest = {
-    name: 'Product_name1',
-    qtd: '2',
-    cat_id: '1'
+    name: 'New Posted Product',
+    qtd: 2,
+    cat_id: '66270ac084ea3a78ac4cad6d'
+}
+
+const putProductTest = {
+    name: 'This Product Has Been Updated'
 }
 
 const postCategoryTest = {
-    name: 'Category_name1',
+    name: 'New Category',
     img_url: 'http://cbissn.ibict.br/images/phocagallery/galeria2/thumbs/phoca_thumb_l_image03_grd.png'
 }
 
 const postUserTest = {
-    name:'Username1',
-    password:'Password1'
+    name:'New User',
+    password:'New Password'
+}
+
+const putCategoryTest = {
+    name: 'This Category Has Been Updated',
 }
 
 describe('###Tests for Server Configuration', async(t) => {
@@ -30,7 +40,7 @@ describe('###Tests for Server Configuration', async(t) => {
         deepEqual(options.port, '3000');
         deepEqual(options.host, '127.0.0.1');
         deepEqual(options.jwt_secret, 'Abcd@1234');
-        deepEqual(options.db_url, 'mongodb://localhost:27017/dositio');
+        deepEqual(options.db_url, 'mongodb://127.0.0.1:27017/dositio');
     });
 });
 
@@ -73,7 +83,7 @@ describe('###Tests for Unauthenticated Routes', async(t) => {
             });
             const response = await app.inject({
                 method: 'GET',
-                url: '/categories/1/products'
+                url: '/categories/662702a784ea3a78ac4cad5d/products'
             });
             
             equal(response.statusCode, 200);
@@ -89,6 +99,9 @@ describe('###Tests for Unauthenticated Routes', async(t) => {
                 method: 'POST',
                 url: '/register',
                 body: postUserTest,
+                headers: {
+                    'x-access-token': testJWT
+                }
             });
             equal(response.statusCode, 201);
         });
@@ -124,37 +137,46 @@ describe('###Tests for Unauthenticated Routes', async(t) => {
             equal(response.statusCode, 501);
         });
 
+        test('# No Auth Token', async(t) => {
+            const app = await build(options);
+
+            t.after(async() => {
+                await app.close();
+            });
+
+            const response = await app.inject({
+                method: 'DELETE',
+                url: '/products/662706b684ea3a78ac4cad64',
+                headers:{
+
+                }
+            });
+
+            equal(response.statusCode, 401);
+        });
+        
+        test('# Invalid Auth Token', async(t) => {
+            const app = await build(options);
+
+            t.after(async() => {
+                await app.close();
+            });
+
+            const response = await app.inject({
+                method: 'DELETE',
+                url: '/products/662706b684ea3a78ac4cad64',
+                headers:{
+                    'x-access-token': 'asjdhjaiosdj'
+                }
+            });
+
+            equal(response.statusCode, 401);
+        });
+
     });
 });
 
 describe('###Tests for Authenticated routes', async(t) => {
-
-    test('#Login and get JWT token', async(t) => {
-        const app = await build(options);
-
-        t.after(async() => {
-            await app.close();
-        });
-
-        const userData = {
-            username: 'testUser',
-            password: 'testPassword'
-        };
-
-        const response = await app.inject({
-            method: 'POST',
-            url: '/auth',
-            payload: userData
-        });
-        
-        equal(response.statusCode, 200);
-        
-        const responseData = JSON.parse(response.body);
-        const token = responseData['x-access-token'];
-        
-        t.context.token = token;
-    });
-    
     
     describe('##Success Requests', async(t) => {
         test('# POST /products', async(t) => {
@@ -168,7 +190,7 @@ describe('###Tests for Authenticated routes', async(t) => {
                 url: '/products',
                 body: postProductTest,
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
 
@@ -183,9 +205,9 @@ describe('###Tests for Authenticated routes', async(t) => {
             });
             const response = await app.inject({
                 method: 'DELETE',
-                url: '/products/1',
+                url: '/products/662706b684ea3a78ac4cad64',
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
 
@@ -200,10 +222,10 @@ describe('###Tests for Authenticated routes', async(t) => {
             });
             const response = await app.inject({
                 method: 'PUT',
-                url: '/products/1',
-                body: postProductTest,
+                url: '/products/6627108e84ea3a78ac4cad80',
+                body: putProductTest,
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
 
@@ -221,7 +243,7 @@ describe('###Tests for Authenticated routes', async(t) => {
                 url: '/categories',
                 body: postCategoryTest,
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
             equal(response.statusCode, 201);
@@ -235,9 +257,9 @@ describe('###Tests for Authenticated routes', async(t) => {
             });
             const response = await app.inject({
                 method: 'DELETE',
-                url: '/categories/1',
+                url: '/categories/662710f984ea3a78ac4cad82',
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
 
@@ -252,10 +274,10 @@ describe('###Tests for Authenticated routes', async(t) => {
             });
             const response = await app.inject({
                 method: 'PUT',
-                url: '/categories/1',
-                body: postCategoryTest,
+                url: '/categories/6627049b84ea3a78ac4cad5f',
+                body: putCategoryTest,
                 headers: {
-                    authorization: `Bearer ${t.context.token}`
+                    'x-access-token': testJWT
                 }
             });
 

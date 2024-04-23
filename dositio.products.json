@@ -1,0 +1,24 @@
+[{
+  "_id": {
+    "$oid": "662705c284ea3a78ac4cad61"
+  },
+  "name": "Posted Product 1",
+  "qtd": 500,
+  "cat_id": "66270ac084ea3a78ac4cad6d"
+},
+{
+  "_id": {
+    "$oid": "662706b684ea3a78ac4cad64"
+  },
+  "name": "Delete Product Test",
+  "qtd": 123,
+  "cat_id": "66270ac084ea3a78ac4cad6d"
+},
+{
+  "_id": {
+    "$oid": "6627108e84ea3a78ac4cad80"
+  },
+  "name": "Update Product Test",
+  "qtd": 0,
+  "cat_id": "66270ac084ea3a78ac4cad6d"
+}]

@@ -1,11 +1,11 @@
 {
   "name": "dositio",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon server.js",
-    "test": "c8 node --test --test-reporter=spec test.js"
+    "test": "c8 node --test --test-reporter=spec test.js",
+    "start": "node server.js"
   },
   "type": "module",
   "author": "",
@@ -23,5 +23,6 @@
   "devDependencies": {
     "nodemon": "^3.1.0",
     "pino-pretty": "^10.3.1"
-  }
+  },
+  "description": ""
 }

@@ -42,9 +42,9 @@ export default async function categories(app, options){
 
     app.get('/categories/:id/products', async (request, reply) => {
         let id = request.params.id;
-        let products = await products.find({cat_id: id}).toArray();
+        let productsList = await products.find({cat_id: id}).toArray();
 
-        return products;
+        return productsList;
     });
 
     app.delete('/categories/:id', {
@@ -54,7 +54,7 @@ export default async function categories(app, options){
     },async (request, reply) => {
         let id = request.params.id;
 
-        await products.deleteOne({_id: new app.mongo.ObjectId(id)});
+        await categories.deleteOne({_id: new app.mongo.ObjectId(id)});
 
         return reply.code(204).send();
     });
